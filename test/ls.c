@@ -1,13 +1,16 @@
+#include "arrow.h"
 #include <stdio.h>
 #include <dirent.h>
 #include<sys/stat.h>
 #include<time.h>
-void getFilesize(const char* filename) {
+void lscommand(const char* filename) {
     struct stat st;
     if(stat(filename, &st) != 0) {
         return ;
     }
-    printf("%ld B\t",st.st_size);  
+    
+    printf("%s\t",filename);
+    printf("%ldB\t",st.st_size);  
     printf( (S_ISDIR(st.st_mode)) ? "d" : "-");
     printf( (st.st_mode & S_IRUSR) ? "r" : "-");
     printf( (st.st_mode & S_IWUSR) ? "w" : "-");
@@ -25,7 +28,7 @@ void getFilesize(const char* filename) {
 }
 int listdir(const char *path) 
 {
-   
+  int count=1;  
   struct dirent *entry;
  
   DIR *dp;
@@ -39,8 +42,10 @@ int listdir(const char *path)
 
   while((entry = readdir(dp)))
 
-  {  printf("%s\t",entry->d_name);
-     getFilesize(entry->d_name);
+  {  
+ //    printf("%d ",count);
+     lscommand(entry->d_name);
+     //count++;
    } 
 
   closedir(dp);
@@ -48,7 +53,10 @@ int listdir(const char *path)
 }
 
 int main() {
-
+  
   listdir(".");
+  getch();
+  cursor();
+
   return 0;
 }
